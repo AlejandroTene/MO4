@@ -1,66 +1,84 @@
-import { View, StyleSheet,Alert} from "react-native"
-import {Input, Button} from "@rneui/base"
+import { View, StyleSheet, Alert } from "react-native"
+import { Input, Button } from "@rneui/base"
 import { useState } from "react"
-import { saveLaptopsRest} from "../rest/laptops"
+import { saveLaptopsRest, updateLaptopsRest } from "../rest/laptops"
 
-export const LaptopsForm=({navigation})=>{
-    const [brand,setBrand]=useState();
-    const [processor,setProcessor]=useState();
-    const [memory,setMemory]=useState();
-    const [disk,setDisk]=useState();
+export const LaptopsForm = ({ navigation, route }) => {
+    let laptopRetrived = route.params.laptopParam
+    let isNew = true;
+    if (laptopRetrived != null) {
+        isNew = false;
+    }
+    const [brand, setBrand] = useState(isNew ? null : laptopRetrived.marca);
+    const [processor, setProcessor] = useState(isNew ? null : laptopRetrived.procesador);
+    const [memory, setMemory] = useState(isNew ? null : laptopRetrived.memoria);
+    const [disk, setDisk] = useState(isNew ? null : laptopRetrived.disco);
 
-    const showMessage=()=>{
-        Alert.alert("CONFIRMACIÓN","Se guardo la Laptop");
+    const showMessage = () => {
+        Alert.alert("CONFIRMACIÓN", isNew ? "Se guardo la Laptop" : "Laptop Actulizada");
+        navigation.goBack();
     }
 
-    const saveLaptops=()=>{
+    const createLaptops = () => {
         console.log("saveLaptops")
-        navigation.goBack();
         saveLaptopsRest(
             {
-                brand:brand,
-                processor:processor,
-                memory:memory,
-                disk:disk
+                brand: brand,
+                processor: processor,
+                memory: memory,
+                disk: disk
             },
             showMessage
         );
     }
-    
+    const updateLaptop = () => {
+        console.log("actilizando contacto")
+        console.log(laptopRetrived.id)
+        updateLaptopsRest({
+            id: laptopRetrived.id,
+            brand: brand,
+            processor: processor,
+            memory: memory,
+            disk: disk
+
+        }, showMessage)
+    }
+
+
     return <View style={styles.container}>
         <Input
             value={brand}
             placeholder="MARCA:"
-            onChangeText={(value)=>{
+            onChangeText={(value) => {
                 setBrand(value);
             }}
         />
         <Input
             value={processor}
             placeholder="PROCESADOR:"
-            onChangeText={(value)=>{
+            onChangeText={(value) => {
                 setProcessor(value);
             }}
         />
         <Input
             value={memory}
             placeholder="MEMORIA:"
-            onChangeText={(value)=>{
+            onChangeText={(value) => {
                 setMemory(value);
             }}
         />
         <Input
             value={disk}
             placeholder="DISCO:"
-            onChangeText={(value)=>{
+            onChangeText={(value) => {
                 setDisk(value);
             }}
         />
         <Button
             title="GUARDAR"
-            onPress={saveLaptops}
-        />        
-        
+            onPress={isNew ? createLaptops : updateLaptop}
+        />
+
 
     </View>
 }
@@ -68,9 +86,9 @@ export const LaptopsForm=({navigation})=>{
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-  });
+});

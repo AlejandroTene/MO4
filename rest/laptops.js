@@ -39,3 +39,30 @@ export const saveLaptopsRest=(laptop,fnShowMessage)=>{
         console.log(body);
     });
 }
+
+export const updateLaptopsRest=(laptop,fnShowMessage)=>{
+
+    const config={
+        method:"PUT",
+        header:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            id: laptop.id,
+            marca: laptop.brand,
+            procesador: laptop.processor,
+            memoria: laptop.memory,
+            disco: laptop.disk
+            
+        })
+       
+    }
+
+    fetch(
+        URL+"laptops/"+laptop.id,config
+    ).then(response=>response.json()
+    ).then((body)=>{
+        fnShowMessage();
+        console.log(body);
+    });
+}
