@@ -35,7 +35,7 @@ export const saveLaptopsRest=(laptop,fnShowMessage)=>{
         URL+"laptops"
     ).then(response=>response.json()
     ).then((body)=>{
-        fnShowMessage();
+        fnShowMessage("Se ha creado la laptop");
         console.log(body);
     });
 }
@@ -62,7 +62,22 @@ export const updateLaptopsRest=(laptop,fnShowMessage)=>{
         URL+"laptops/"+laptop.id,config
     ).then(response=>response.json()
     ).then((body)=>{
-        fnShowMessage();
+        fnShowMessage("Laptop actualizada");
+        console.log(body);
+    });
+}
+
+export const deleteLaptopsRest=(laptop,fnShowMessage)=>{
+
+    const config={
+        method:"DELETE"
+    }
+
+    fetch(
+        URL+"laptops/"+laptop.id,config
+    ).then(response=>response.json()
+    ).then((body)=>{
+        fnShowMessage("Se ha eliminado la laptop");
         console.log(body);
     });
 }
